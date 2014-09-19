@@ -1,3 +1,5 @@
+var config = require('config.js');
+
 var readline = require('readline');
 var rl = readline.createInterface({
   input: process.stdin,
@@ -8,8 +10,8 @@ var google = require('googleapis/lib/googleapis.js');
 var OAuth2Client = google.auth.OAuth2;
 var gmail = google.gmail('v1');
 var REDIRECT_URL = 'urn:ietf:wg:oauth:2.0:oob';
-var CLIENT_ID = process.env.CLIENT_ID;
-var CLIENT_SECRET = process.env.CLIENT_SECRET;
+var CLIENT_ID = config.CLIENT_ID;
+var CLIENT_SECRET = config.CLIENT_SECRET;
 var oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 
 var Notification = require('node-notifier');
