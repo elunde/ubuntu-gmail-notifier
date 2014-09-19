@@ -51,14 +51,6 @@ function getAccessToken(oauth2Client, callback) {
 function check_for_messages() {
    gmail.users.messages.list({ userId: 'me', auth: oauth2Client, labelsIds: 'INBOX', q: 'is:unread' }, function(err, unread_messages) {
       if (!err) {
-        console.log(unread_messages);
-        //TODO: go through the list of unread messages, find the newest message, compare its date with the one in the database
-        //if the date is newer, notify user and store date of message in database
-        //else do nothing
-        //var message_list = unread_messages.messages;
-        //check_dates(message_list, function(newest_date) {
-          //compare to database
-        //});
         
         var highest_unread_msg_id = unread_messages.messages[0].id;
         db.find({ highest_msg_id: { $exists : true} }, function(err, docs) {
@@ -77,32 +69,16 @@ function check_for_messages() {
             if (notify) {
               notifier.notify({
                 title: 'New message received',
-                message: 'You have ' + unread_messages.resultSizeEstimate + ' new message(s)'
+                message: 'You have ' + unread_messages.resultSizeEstimate + ' unread message(s)'
               }, function(error, response) {
                 process.exit();
               });
             }
+            else {
+              process.exit();
+            }
           }
         });
-        //gmail.users.messages.get({ id: newest_msg_id, userId: 'me', auth: oauth2Client, format: 'metadata' }, get_date);
       }
   });
 }
-
-function get_date(err, msg) {
-  var date = msg.payload.headers[2].value;
-  console.log(date);
-}
-
-// function check_dates(message_list) {
-//   var newest_date = 0;
-//   for (var i = 0; i < message_list.length; i++) {
-//     gmail.users.messages.get({ id: message_list[i].id, userId: 'me', auth: oauth2Client, format: 'metadata' }, get_date);
-//   }
-//   notifier.notify({
-//     title: 'New message received',
-//     message: 'You have ' + unread_messages.resultSizeEstimate + ' new message(s)'
-//   }, function(error, response) {
-//     //process.exit();
-//   });
-// }
