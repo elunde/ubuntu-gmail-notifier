@@ -60,8 +60,8 @@ function check_for_messages() {
             var notify = false;
             if (docs.length > 0) {
               if (highest_unread_msg_id > docs[0].highest_msg_id) {
-                notify = true;
                 db.update( { highest_msg_id: { $exists : true } }, { highest_msg_id : highest_unread_msg_id });
+                notify = true;
               }
             }
             else {
@@ -72,12 +72,7 @@ function check_for_messages() {
               notifier.notify({
                 title: 'New message received',
                 message: 'You have ' + unread_messages.resultSizeEstimate + ' unread message(s)'
-              }, function(error, response) {
-                process.exit();
               });
-            }
-            else {
-              process.exit();
             }
           }
         });
