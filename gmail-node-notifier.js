@@ -40,8 +40,7 @@ function getAccessToken(oauth2Client, callback) {
   rl.question('Enter the code here:', function(code) {
     // request access token
     oauth2Client.getToken(code, function(err, tokens) {
-      // set tokens to the client
-      // TODO: tokens should be set by OAuth2 client.
+      // set tokens to the client and store them in database
       oauth2Client.setCredentials(tokens);
       db.insert({ tokens : tokens});
       callback();
@@ -51,12 +50,12 @@ function getAccessToken(oauth2Client, callback) {
 
 function check_for_messages() {
    gmail.users.messages.list({ userId: 'me', auth: oauth2Client, labelsIds: 'INBOX', q: 'is:unread' }, function(err, unread_messages) {
-      if (err) {
-          console.log('An error occured', err);
+      if (!err) {
+          notifier.notify({
+            title: 'New message received',
+            message: 'You have ' + unread_messages.resultSizeEstimate + ' new message(s)'
+        });
       }
-      notifier.notify({
-        title: 'New message received',
-        message: 'You have ' + unread_messages.resultSizeEstimate + ' new message(s)'
-      });
+      process.exit();
   });
 }
