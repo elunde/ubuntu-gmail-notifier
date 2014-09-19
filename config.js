@@ -3,4 +3,4 @@ var config = {
     CLIENT_SECRET : '...'
 };
 
-module.exports.config = config;
+module.exports = config;
