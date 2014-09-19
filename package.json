@@ -10,7 +10,8 @@
   "author": "Mostafa Eweda <mo.eweda@gmail.com>",
   "dependencies": {
     "googleapis": "~1.0.13",
-    "node-notifier": "~3.2.1"
+    "node-notifier": "~3.2.1",
+    "nedb": "~0.11.1"
   },
   "devDependencies": {},
   "scripts": {
