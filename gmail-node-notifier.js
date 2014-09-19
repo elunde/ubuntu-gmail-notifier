@@ -54,7 +54,9 @@ function check_for_messages() {
           notifier.notify({
             title: 'New message received',
             message: 'You have ' + unread_messages.resultSizeEstimate + ' new message(s)'
-        }, process.exit());
+        }, function(error, response) {
+          process.exit();
+        });
       }
   });
 }
