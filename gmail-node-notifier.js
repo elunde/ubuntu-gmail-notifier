@@ -1,21 +1,32 @@
 var readline = require('readline');
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 var google = require('googleapis/lib/googleapis.js');
 var OAuth2Client = google.auth.OAuth2;
 var gmail = google.gmail('v1');
-
 var REDIRECT_URL = 'urn:ietf:wg:oauth:2.0:oob';
 var CLIENT_ID = process.env.CLIENT_ID;
 var CLIENT_SECRET = process.env.CLIENT_SECRET;
-
 var oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 
 var Notification = require('node-notifier');
 var notifier = new Notification();
 
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
+var Datastore = require('nedb');
+var db = new Datastore({ filename: '.database', autoload: true });
+db.find({ tokens : { $exists: true } }, function(err, docs) {
+  if (!err) {
+    if (docs.length > 0) {
+      oauth2Client.setCredentials(docs[0].tokens);
+      check_for_messages();
+    }
+    else {
+      getAccessToken(oauth2Client, check_for_messages);
+    }
+  }
 });
 
 function getAccessToken(oauth2Client, callback) {
@@ -32,23 +43,20 @@ function getAccessToken(oauth2Client, callback) {
       // set tokens to the client
       // TODO: tokens should be set by OAuth2 client.
       oauth2Client.setCredentials(tokens);
+      db.insert({ tokens : tokens});
       callback();
     });
   });
 }
 
-// retrieve an access token
-getAccessToken(oauth2Client, function() {
-  
-  //TODO: use google api to retrieve new messages and send notifications to Ubuntu
-  gmail.users.messages.list({ userId: 'me', auth : oauth2Client, labelsIds: 'INBOX', q: 'is:unread' }, function(err, unread_messages) {
+function check_for_messages() {
+   gmail.users.messages.list({ userId: 'me', auth: oauth2Client, labelsIds: 'INBOX', q: 'is:unread' }, function(err, unread_messages) {
       if (err) {
           console.log('An error occured', err);
       }
       notifier.notify({
         title: 'New message received',
-        message: 'You have ' + unread_messages.resultSizeEstimate + ' new messages'
+        message: 'You have ' + unread_messages.resultSizeEstimate + ' new message(s)'
       });
-      console.log(unread_messages.resultSizeEstimate);
   });
-});
+}
