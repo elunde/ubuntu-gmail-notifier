@@ -1,0 +1,24 @@
+{
+  "name": "gmail-node-notifier",
+  "version": "0.0.0",
+  "description": "A chat example to showcase how to use `socket.io` with a static `express` server with `async` for control flow.",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:elunde/google_api.git"
+  },
+  "author": "Mostafa Eweda <mo.eweda@gmail.com>",
+  "dependencies": {
+    "googleapis": "~1.0.13",
+    "node-notifier": "~3.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elunde/google_api/issues"
+  },
+  "homepage": "https://github.com/elunde/google_api"
+}
