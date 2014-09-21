@@ -74,7 +74,7 @@ var job = new CronJob({
 			  }
 			  if (notify) {
 			      notifier.notify({
-				  title: 'New message received',
+				  title: 'New email',
 				  message: 'You have ' + unread_messages.resultSizeEstimate + ' unread message(s)'
 			      });
 			  }
