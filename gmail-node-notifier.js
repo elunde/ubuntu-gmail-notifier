@@ -1,3 +1,5 @@
+#!/usr/bin/env nodejs
+
 var CronJob = require('cron').CronJob;
 var job = new CronJob({
   cronTime: '*/5 * * * *',
@@ -22,7 +24,7 @@ var job = new CronJob({
       var notifier = new Notification();
 
       var Datastore = require('nedb');
-      var db = new Datastore({ filename: '.database', autoload: true });
+      var db = new Datastore({ filename: config.db_path + '.database', autoload: true });
       db.find({ tokens : { $exists: true } }, function(err, docs) {
 	  if (!err) {
 	      if (docs.length > 0) {
