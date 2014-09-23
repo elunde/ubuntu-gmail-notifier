@@ -20,7 +20,7 @@ var Notification = require('node-notifier');
 var notifier = new Notification();
 
 var Datastore = require('nedb');
-var db = new Datastore({ filename: '.database', autoload: true });
+var db = new Datastore({ filename: config.db_path + '.database', autoload: true });
 db.find({ tokens : { $exists: true } }, function(err, docs) {
     if (!err) {
       if (docs.length > 0) {
@@ -66,17 +66,19 @@ function check_for_messages() {
                 	      }
             	  }
             	  else {
+		      notify = true;
             	      db.insert({ highest_msg_id : highest_unread_msg_id });
-            	      notify = true;
             	  }
             	  if (notify) {
+		      console.log('Sending notification');
             	      notifier.notify({
                 		  title: 'New message received',
                 		  message: 'You have ' + unread_messages.resultSizeEstimate + ' unread message(s)'
             	      });
-            	  }
+		  }
               }
           });
       }
     });
 }
+
