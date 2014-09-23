@@ -70,12 +70,14 @@ function check_for_messages() {
             	      db.insert({ highest_msg_id : highest_unread_msg_id });
             	  }
             	  if (notify) {
-		      console.log('Sending notification');
+		                console.log('Sending notification');
             	      notifier.notify({
                 		  title: 'New message received',
                 		  message: 'You have ' + unread_messages.resultSizeEstimate + ' unread message(s)'
+            	      }, function(error, response) {
+            	        console.log('Success!');
             	      });
-		  }
+		            }
               }
           });
       }
